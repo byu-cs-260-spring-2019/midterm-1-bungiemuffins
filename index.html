@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Midterm</title>
+        <script type="JavaScript" src="script.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+
+        <div id="app">
+            <h1 class="jumbotron" style="padding: 5%">Book Search</h1>
+
+            <div style="padding: 5%">
+                <h2>Search for a Book</h2>
+                <form v-on:submit.prevent="bookSearch">
+                    <input type="text" v-model:value="search">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+            <div v-if="loading">
+                <p style="padding:5%; font-size: 3em;" ><div  class="spinner-border"></div>  Loading...</p>
+            </div>
+            <div v-else>
+                <h2 style="padding:5%">Results</h2>
+                <div v-for="item in docs" class="Results" style="padding: 5%">
+                    <hr>
+                    <h3>{{item.title}}</h3>
+                    <h4>{{item.author_name[0]}}</h4>
+                    <p>{{item.publish_date[0]}}</p>
+                    <img :href="item.thumbnail">
+                    <input type="checkbox" v-model="item.favorite"/>
+                    <p>favorite</p>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.2/dist/vue.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="/script.js"></script>
+    </body>
+    <footer>
+
+    </footer>
+</html>
