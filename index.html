@@ -29,16 +29,15 @@
             <div v-if="loading">
                 <p style="padding:5%; font-size: 3em;" ><div  class="spinner-border"></div>  Loading...</p>
             </div>
-            <div v-else>
-                <h2 style="padding:5%">Results</h2>
-                <div v-for="item in docs" class="Results" style="padding: 5%">
+            <div style="padding:5%" v-else>
+                <h2>Results</h2>
+                <button class="btn btn-success" @click="showFavorites">Show Favorites</button>
+                <button class="btn btn-success" @click="showAll">Show All</button>
+                <div v-for="item in filterFavorites" class="Results">
                     <hr>
                     <h3>{{item.title}}</h3>
-                    <h4>{{item.author_name[0]}}</h4>
-                    <p>{{item.publish_date[0]}}</p>
-                    <img :href="item.thumbnail">
                     <input type="checkbox" v-model="item.favorite"/>
-                    <p>favorite</p>
+                    <p>Favorite</p>
                 </div>
             </div>
         </div>

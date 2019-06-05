@@ -5,14 +5,12 @@ let app = new Vue({
         search: '',
         docs: [{
             title: '',
-            author_name: '',
-            publish_date: '',
             isbn: '',
             favorite: false,
             thumbnail: '',
         }],
         loading: false,
-
+        show: 'all',
 
     },
     methods: {
@@ -23,21 +21,12 @@ let app = new Vue({
                 const response = await axios.get('https://openlibrary.org/search.json?q=' + this.search);
                 console.log("response :", response);
                 this.docs = response.data.docs;
-                this.loading =  false;
-                console.log("docs :", this.docs);
-                console.log("title :", this.docs[0].title);
-                for(var i = 0; i < this.docs.length; ++i) {
-                    var picture = '';
-                    if(this.docs[i].isbn != undefined) {
-                        picture = await axios.get('https://openlibrary.org/api/books?bibkeys=ISBN:' + this.docs[i].isbn[0] + '&jscmd=details&format=json');
-                        console.log(picture.data.thumbnail_url);
-                        this.docs[i].thumbnail = picture.data.thumbnail_url;
-                    }
-                    console.log(picture);
-                    console.log(this.docs[i].thumbnail);
+                for(item in this.docs) {
+                    this.docs[item].favorite = false;
                 }
-                console.log('picture', picture);
+                console.log("docs :", this.docs);
                 this.loading = false;
+                this.thumbnailGet();
                 return true;
             }
             catch(err) {
@@ -45,13 +34,38 @@ let app = new Vue({
                 return false;
             }
         },
-
+        async thumbnailGet() {
+            try {
+                for(var i = 0; i < this.docs.length; ++i) {
+                    var picture = '';
+                    if(this.docs[i].isbn != undefined) {
+                        picture = await axios.get('https://openlibrary.org/api/books?bibkeys=ISBN:' + this.docs[i].isbn[0] + '&jscmd=details&format=json');
+                        console.log("picture :", picture)
+                        console.log(picture.data['ISBN:' + this.docs[i].isbn[0]].thumbnail_url);
+                        this.docs[i].thumbnail = picture.data['ISBN:' + this.docs[i].isbn[0]].thumbnail_url;
+                    }
+                }
+                return true;
+            }
+            catch(err) {
+                console.log(error);
+                return false;
+            }
+        },
+        showAll() {
+            this.show = 'all';
+        },
+        showFavorites() {
+            this.show = 'favorites';
+        },
     },
     computed: {
-        searchFormat() {
-            this.search = this.search.replace(' ', '+');
+        filterFavorites() {
+            if (this.show === 'favorites')
+            return this.docs.filter(item => {
+             return item.favorite;
+            });
+            return this.docs;
         }
-    }
-
-
+    },
 });
